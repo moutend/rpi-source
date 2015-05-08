@@ -362,6 +362,10 @@ if not args.nomake:
     info("make modules_prepare")
     sh("cd %s && make modules_prepare %s" % (linux_symlink, (" > /dev/null" if args.quiet else "")))
 
+if sh_out("uname -r | grep +$"):
+    info("Add plus-sign to CONFIG_LOCALVERSION")
+    sh("sed -i 's/CONFIG_LOCALVERSION=\"-v7\"/CONFIG_LOCALVERSION\"-v7+\"/' %s" % os.path.join(linux_dir, '.config'))
+
 if not os.path.exists('/usr/include/ncurses.h'):
     info("ncurses-devel is NOT installed. Needed by 'make menuconfig'. On Raspbian sudo apt-get install libncurses5-dev")
 
